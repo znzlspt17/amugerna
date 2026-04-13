@@ -1,0 +1,9 @@
+## folder 
+__pycache__
+.venv
+ipynb
+images
+
+## file
+uv.lock
+app.*
