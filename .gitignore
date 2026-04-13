@@ -1,7 +1,6 @@
 ## folder 
 __pycache__
 .venv
-ipynb
 images
 results
 poses
@@ -9,3 +8,5 @@ poses
 ## file
 uv.lock
 app.*
+
+final_images_masked.zip
