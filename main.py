@@ -145,8 +145,8 @@ def _score_against_references(keypoints_list: list[dict]) -> dict:
 async def lifespan(app: FastAPI):
     # 시작 시 실행
     global model, reference_poses
-    logger.info("[Startup] 모델 로드 시작: /models/yolo26x-pose.pt")
-    model = YOLO("/models/yolo26x-pose.pt")
+    logger.info("[Startup] 모델 로드 시작: ./models/yolo26x-pose.pt")
+    model = YOLO("./models/yolo26x-pose.pt")
     logger.info("[Startup] 모델 로드 완료")
     reference_poses = _load_reference_poses()
     loaded_ids = sorted(reference_poses.keys())

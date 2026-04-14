@@ -4,6 +4,7 @@ __pycache__
 images
 results
 poses
+models
 
 ## file
 uv.lock
