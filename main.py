@@ -28,21 +28,21 @@ logging.basicConfig(
     ],
 )
 model = None
-reference_poses = {}  # {1: [...], 2: [...], ...}
+reference_poses = {}  # {0: [...], 1: [...], ...}
 logger = logging.getLogger(__name__)
 
 
 def _load_reference_poses() -> dict:
-    """final_poses/1.json ~ 11.json 로드"""
+    """final_poses/0.json ~ 10.json 로드"""
     poses = {}
-    for i in range(1, 12):
+    for i in range(0, 11):
         path = f"./final_poses/{i}.json"
         if os.path.exists(path):
             with open(path, "r", encoding="utf-8") as f:
                 poses[i] = json.load(f)
             logger.info(f"[Reference] {path} 로드 완료")
         else:
-            logger.warning(f"[Reference] {path} 파일 없음 - 건너맹니다")
+            logger.warning(f"[Reference] {path} 파일 없음 - 건너뜁니다")
     return poses
 
 
@@ -131,7 +131,7 @@ def _score_against_references(keypoints_list: list[dict]) -> dict:
         return {}
     actual_norm = _normalize_pose(keypoints_list[0])
     scores = {}
-    for ref_id in range(1, 12):
+    for ref_id in range(0, 11):
         if ref_id not in reference_poses:
             continue
         ref_data = reference_poses[ref_id]
@@ -257,7 +257,7 @@ def save_image(file: UploadFile = File(...)):
             actual_norm = _normalize_pose(actual_person)
             logger.info("[자세 비교] ──────────────────────────")
             total_scores = []
-            for ref_id in range(1, 12):
+            for ref_id in range(0, 11):
                 if ref_id not in reference_poses:
                     continue
                 ref_data = reference_poses[ref_id]
@@ -270,7 +270,7 @@ def save_image(file: UploadFile = File(...)):
                 logger.info(f"[자세 비교] {ref_id:2d}번 포즈 유사도: {pct:5.1f}%")
             if total_scores:
                 avg = float(np.mean(total_scores))
-                best_id = int(np.argmax(total_scores)) + 1
+                best_id = int(np.argmax(total_scores))
                 logger.info(f"[자세 비교] 종합 평균 스코어   : {avg:5.1f}%")
                 logger.info(f"[자세 비교] 가장 유사한 포즈   : {best_id}번 ({max(total_scores):.1f}%)")
             logger.info("[자세 비교] ──────────────────────────")
@@ -288,9 +288,9 @@ def pose_score(pose_id: int = Form(...), file: UploadFile = File(...)):
 
     logger.info(f"[pose_score] 요청 수신 - pose_id: {pose_id}, 파일명: {file.filename}, content-type: {file.content_type}")
 
-    if pose_id not in range(1, 12):
-        logger.warning(f"[pose_score] 유효하지 않은 pose_id: {pose_id} (허용 범위: 1~11)")
-        return UTF8JSONResponse({"error": f"pose_id는 1~11 사이여야 합니다. 입력값: {pose_id}"})
+    if pose_id not in range(0, 11):
+        logger.warning(f"[pose_score] 유효하지 않은 pose_id: {pose_id} (허용 범위: 0~10)")
+        return UTF8JSONResponse({"error": f"pose_id는 0~10 사이여야 합니다. 입력값: {pose_id}"})
 
     t_start = time.perf_counter()
 
